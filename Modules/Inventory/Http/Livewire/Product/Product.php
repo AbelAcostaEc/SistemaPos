@@ -31,12 +31,12 @@ class Product extends Component
     {
         $this->authorizeRoleOrPermission('ver productos');
 
-        $categories = CategoryModel::get();
+        $categories = CategoryModel::get(); // Obtiene las categorias
         $aux_categories = [];
         foreach ($categories as $category) {
             $aux_categories[$category->id] = $category->name;
         }
-        $this->categories = $aux_categories;
+        $this->categories = $aux_categories; // Genera el array id, nombre
 
         if ($this->search) {
             $this->reset_page();
