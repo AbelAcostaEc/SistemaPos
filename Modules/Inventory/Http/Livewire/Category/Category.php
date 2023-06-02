@@ -1,75 +1,71 @@
 <?php
 
-namespace Modules\Administration\Http\Livewire\Permission;
+namespace Modules\Inventory\Http\Livewire\Category;
 
 use Livewire\Component;
+use Modules\Inventory\Entities\Category as CategoryModel;
 use App\Traits\AuthorizesRoleOrPermission;
-
-use Spatie\Permission\Models\Permission as PermissionModel;
 use Livewire\WithPagination;
 
-class Permission extends Component
+class Category extends Component
 {
     use WithPagination;
     use AuthorizesRoleOrPermission;
 
-
     public $deleteMode=false;
-    public $name, $permission_id;
+    public $name, $category_id;
     public $search;
-    public $page=1;
-
+    // public $categories;
 
     public function render()
     {
-        $this->authorizeRoleOrPermission('ver permisos');
-
+        $this->authorizeRoleOrPermission('ver categorias');        
         if($this->search){
             $this->reset_page();
         }
 
-        $permissions=PermissionModel::where('name', 'like', '%' . $this->search . '%')
+        $categories=CategoryModel::where('name', 'like', '%' . $this->search . '%')
                         ->orWhere('id', 'like', '%' . $this->search . '%')
                         ->orderBy('id')
                         ->paginate(5);
-
-        return view('administration::livewire.permission.permission', compact('permissions'));
+        return view('inventory::livewire.category.category', compact('categories'));
     }
 
     public function store()
     {
         $data= $this->validate([
-            'name' => 'required|unique:permissions,name',
+            'name' => 'required|unique:categories,name',
         ]);
 
-        if($store = PermissionModel::create($data)){
-            session()->flash('success', 'Permiso creado correctamente.');
+        if($store = CategoryModel::create($data)){
+            session()->flash('success', 'Categoria creado correctamente.');
         }else{
             session()->flash('error', $store->description);
         }
 
         $this->resetInputFields();
         $this->emit('hideModal');
+        $this->emit('datatable');
     }
 
     public function edit($id)
     {
-        $permission=PermissionModel::find($id);
-        $this->permission_id=$id;
-        $this->name=$permission->name;
+        $category=CategoryModel::find($id);
+        $this->category_id=$id;
+        $this->name=$category->name;
     }
 
     public function update(){
 
         $data= $this->validate([
-            'name' => 'required|unique:permissions,name,'.$this->permission_id,
+            'name' => 'required|unique:categories,name,'.$this->category_id,
         ]);
 
-        $permission=PermissionModel::find($this->permission_id);
+        $category=CategoryModel::find($this->category_id);
 
-        if($permission)
+        if($category)
         {
-            $permission->update($data);
+            $category->update($data);
             session()->flash('success', 'Permiso Actualizado Correctamente.');
         } else {
             session()->flash('error', 'No se encontró el permiso.');
@@ -77,29 +73,30 @@ class Permission extends Component
 
         $this->resetInputFields();
         $this->emit('hideModal');
+        $this->emit('datatable');
     }
 
     public function delete($id)
     {
-        $permission=PermissionModel::find($id);
-        $this->permission_id=$id;
-        $this->name=$permission->name;
+        $category=CategoryModel::find($id);
+        $this->category_id=$id;
+        $this->name=$category->name;
         $this->deleteMode=true;
     }
 
 
     public function destroy()
     {
-        if($this->permission_id){
+        if($this->category_id){
 
-            $permission = PermissionModel::find($this->permission_id);
+            $category = CategoryModel::find($this->category_id);
 
-            if ($permission) {
+            if ($category) {
                 // Verificar si el permiso está asignado a algún rol
-                if ($permission->roles()->exists()) {
+                if ($category->products()->exists()) {
                     session()->flash('error', 'No se puede eliminar el permiso porque está asignado a uno o más roles.');
                 } else {
-                    if ($permission->delete()) {
+                    if ($category->delete()) {
                         session()->flash('success', 'Permiso Borrado Correctamente.');
                     } else {
                         session()->flash('error', 'Error al borrar el permiso.');
@@ -112,19 +109,21 @@ class Permission extends Component
         $this->resetInputFields();
         $this->deleteMode=false;
         $this->emit('hideModal');
+        $this->emit('datatable');
     }
 
     public function cancel()
     {
-        $this->permission_id=null;
+        $this->category_id=null;
         $this->deleteMode=false;
         $this->resetInputFields();
+        $this->emit('datatable');
     }
 
     public function resetInputFields(){
         $this->resetValidation();
         $this->name=null;
-        $this->permission_id=null;
+        $this->category_id=null;
         $this->deleteMode=false;
     }
 
@@ -132,9 +131,5 @@ class Permission extends Component
         $this->reset('page');
         $this->paginators['page'] = 1; //Se reinicia la paginacion
     }
-
-    /* public function pagination($number){
-		$this->limit = $number;
-	} */
 
 }

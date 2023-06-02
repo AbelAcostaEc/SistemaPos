@@ -46,66 +46,6 @@
             </div>
             @endcan
             <!--end:Menu item-->
-
-            <!--begin:Menu item-->
-            @can('Ver Cuentas CRM')
-            <div class="menu-item @if($submenu==4 && $menu==1) here @endif show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
-                <!--begin:Menu link-->
-                <a class="menu-link py-3" href="{{ url('crm/account') }}">
-
-                    <span class="menu-title">Cuentas</span>
-                    <span class="menu-arrow d-lg-none"></span>
-
-                </a>
-                <!--end:Menu link-->
-            </div>
-            @endcan
-            <!--end:Menu item-->
-
-            <!--begin:Menu item-->
-            @if(Auth::user()->hasRole('Super Administrador'))
-            <div class="menu-item @if($submenu==5 && $menu==1) here @endif show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
-                <!--begin:Menu link-->
-                <a class="menu-link py-3" href="{{ url('plans/plan') }}">
-
-                    <span class="menu-title">Planes</span>
-                    <span class="menu-arrow d-lg-none"></span>
-
-                </a>
-                <!--end:Menu link-->
-            </div>
-            @endif
-            <!--end:Menu item-->
-            <!--begin:Menu item-->
-            @can('Ver Cuentas CRM')
-            <div class="menu-item @if($submenu==6 && $menu==1) here @endif show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
-                <!--begin:Menu link-->
-                <a class="menu-link py-3" href="{{ url('crm/discardedType') }}">
-
-                    <span class="menu-title">Descartados</span>
-                    <span class="menu-arrow d-lg-none"></span>
-
-                </a>
-                <!--end:Menu link-->
-            </div>
-            @endcan
-            <!--end:Menu item-->
-             <!--begin:Menu item-->
-             @can('Ver Cuentas CRM')
-             <div class="menu-item @if($submenu==7 && $menu==1) here @endif show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
-                 <!--begin:Menu link-->
-                 <a class="menu-link py-3" href="{{ url('crm/trackingType') }}">
-
-                     <span class="menu-title">Seguimiento</span>
-                     <span class="menu-arrow d-lg-none"></span>
-
-                 </a>
-                 <!--end:Menu link-->
-             </div>
-             @endcan
-             <!--end:Menu item-->
-
-
         </div>
         <!--end::Menu-->
     </div>
@@ -120,12 +60,12 @@
         <!--begin::Menu-->
         <div class="menu menu-rounded menu-column menu-lg-row menu-root-here-bg-desktop menu-active-bg menu-title-gray-700 menu-state-primary menu-arrow-gray-400 fw-semibold align-items-stretch flex-grow-1 px-2 px-lg-0" id="#kt_header_menu" data-kt-menu="true">
             <!--begin:Menu item-->
-            @can('Ver Sitios Chatbot')
+            @can('ver productos')
             <div class="menu-item @if($submenu==1 && $menu==2) here @endif show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                 <!--begin:Menu link-->
-                <a class="menu-link py-3" href="{{ url('chatbot/sites') }}">
+                <a class="menu-link py-3" href="{{ route('products') }}">
 
-                    <span class="menu-title">Sitios</span>
+                    <span class="menu-title">Productos</span>
                     <span class="menu-arrow d-lg-none"></span>
 
                 </a>
@@ -135,12 +75,12 @@
             <!--end:Menu item-->
 
             <!--begin:Menu item-->
-            @can('Ver Chats')
+            @can('ver categorias')
             <div class="menu-item @if($submenu==2 && $menu==2) here @endif show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                 <!--begin:Menu link-->
-                <a class="menu-link py-3" href="{{ url('chatbot/chats') }}">
+                <a class="menu-link py-3" href="{{ route('categories') }}">
 
-                    <span class="menu-title">Chats</span>
+                    <span class="menu-title">Categorias</span>
                     <span class="menu-arrow d-lg-none"></span>
 
                 </a>

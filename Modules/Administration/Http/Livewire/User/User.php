@@ -63,7 +63,7 @@ class User extends Component
                 $user->roles()->sync($array_filtered);
                 session()->flash('success', 'Usuario Creado Correctamente.');
             }else{
-                session()->flash('error', $store->description);
+                session()->flash('error', $user->description);
             }
         }else{
             session()->flash('error', 'escoja un rol.');
@@ -83,7 +83,7 @@ class User extends Component
             $aux_roles[$rol->id] = $rol->id;
         }
         $this->role = $aux_roles;
-        $this->delete = 0;
+        $this->deleteMode = 0;
     }
 
     public function update(){
@@ -132,7 +132,7 @@ class User extends Component
             $aux_roles[$rol->id] = $rol->id;
         }
         $this->role = $aux_roles;
-        $this->delete = 1;
+        $this->deleteMode = 1;
     }
     public function destroy()
     {
