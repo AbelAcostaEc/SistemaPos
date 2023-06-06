@@ -1,4 +1,4 @@
-@extends('template.layout',['html_tag_data'=>[], 'title'=> 'Dashboard', 'description'=>'', 'menu' => 1, 'submenu' => 2])
+@extends('template.layout', ['html_tag_data' => [], 'title' => 'Roles', 'description' => '', 'menu' => 1, 'submenu' => 2])
 
 @section('title', 'Roles')
 
@@ -17,7 +17,6 @@
     <script type="text/javascript">
         window.livewire.on('hideModal', () => {
             $('#modalForm').modal('hide');
-
         });
     </script>
 @endsection
