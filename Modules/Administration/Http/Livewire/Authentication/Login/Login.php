@@ -2,14 +2,12 @@
 
 namespace Modules\Administration\Http\Livewire\Authentication\Login;
 
-use App\Models\User;
-
+//Library
 use Livewire\Component;
 
 class Login extends Component
 {
-    public $email;
-    public $password;
+    public $email, $password;
 
     public function render()
     {
@@ -18,19 +16,13 @@ class Login extends Component
 
     public function login()
     {
-        /* $this->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]); */
-
         $credentials = [
             'email' => $this->email,
             'password' => $this->password,
         ];
-
-        if (auth()->attempt($credentials)) {
-
-
+        //Verifica la autenticación
+        if (auth()->attempt($credentials)) 
+        {
             return redirect()->intended('administration/dashboard');
         } else {
             return back()->withInput()->with('error', 'El usuario o su contraseña son incorrectos!');

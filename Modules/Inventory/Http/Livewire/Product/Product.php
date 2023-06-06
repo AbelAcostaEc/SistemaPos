@@ -4,9 +4,9 @@ namespace Modules\Inventory\Http\Livewire\Product;
 
 //Library
 use Livewire\Component;
-use Illuminate\Support\Facades\Storage;
-use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 //Models
 use Modules\Inventory\Entities\Product as ProductModel;
@@ -18,13 +18,13 @@ use App\Traits\AuthorizesRoleOrPermission;
 
 class Product extends Component
 {
-    use WithPagination;
     use AuthorizesRoleOrPermission;
+    use WithPagination;
     use WithFileUploads;
 
     public $product_id, $code, $name, $description, $purchase_price, $sale_price, $stock, $minimum_stock, $image, $product_image;
-    public $deleteMode, $search;
     public $categories, $category_id;
+    public $deleteMode, $search, $paginate = 5;
 
 
     public function render()
@@ -41,14 +41,18 @@ class Product extends Component
         if ($this->search) {
             $this->reset_page();
         }
-
+        // Consulta los productos filtrando con el buscador
         $products = ProductModel::where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('code', 'like', '%' . $this->search . '%')
-            ->orderBy('id')
-            ->paginate(5);
+                                ->orWhere('code', 'like', '%' . $this->search . '%')
+                                ->orderBy('id')
+                                ->paginate($this->paginate);
+                                
         return view('inventory::livewire.product.product', compact('products'));
     }
 
+    /**
+     * Función para guardar
+     */
     public function store()
     {
         $data = $this->validate([
@@ -61,11 +65,13 @@ class Product extends Component
             'minimum_stock' => 'required|numeric',
             "category_id" => 'required'
         ]);
+        
+        // Verifica si se ha subido una imagen
         if ($this->image) {
-            $customName = 'product' . $this->code;
-            $extension = $this->image->getClientOriginalExtension();
-            $path = $this->image->storeAs('products', $customName . '.' . $extension, 'public');
-            $data['image'] = $path;
+            $customName = 'product' . $this->code; //define el nombre del archivo
+            $extension = $this->image->getClientOriginalExtension(); // Obtiene la extension de la img
+            $path = $this->image->storeAs('products', $customName . '.' . $extension, 'public'); //guarda la imagen en el Storage
+            $data['image'] = $path; //Asigna la ruta  de la imagen guardada
         }
 
         if ($store = ProductModel::create($data)) {
@@ -78,6 +84,9 @@ class Product extends Component
         $this->emit('hideModal');
     }
 
+    /**
+     * Funcion para modal editar
+     */
     public function edit($id)
     {
         $product = ProductModel::find($id);
@@ -91,12 +100,13 @@ class Product extends Component
         $this->stock = $product->stock;
         $this->minimum_stock = $product->minimum_stock;
         $this->product_image = $product->image;
-        // $this->image= $product->image;
     }
 
+    /**
+     * Función para actualizar
+     */
     public function update()
     {
-
         $data = $this->validate([
             'code' => 'required|unique:products,code,' . $this->product_id,
             'name' => 'required',
@@ -111,15 +121,16 @@ class Product extends Component
         $product = ProductModel::find($this->product_id);
 
         if ($product) {
+            // Verifica si se ha subido una imagen
             if ($this->image) {
-                // Eliminar la foto anterior del usuario si existe
+                // Eliminar la foto anterior con la misma ruta si existe
                 if ($product->image) {
                     Storage::disk('public')->delete($product->image);
                 }
-                $customName = 'product' . $this->code;
-                $extension = $this->image->getClientOriginalExtension();
-                $path = $this->image->storeAs('products', $customName . '.' . $extension, 'public');
-                $data['image'] = $path;
+                $customName = 'product' . $this->code; //define el nombre del archivo
+                $extension = $this->image->getClientOriginalExtension(); // Obtiene la extension de la img
+                $path = $this->image->storeAs('products', $customName . '.' . $extension, 'public'); //guarda la imagen en el Storage
+                $data['image'] = $path; //Asigna la ruta  de la imagen guardada
             }
 
             $product->update($data);
@@ -132,6 +143,9 @@ class Product extends Component
         $this->emit('hideModal');
     }
 
+    /**
+     * Función para modal delete
+     */
     public function delete($id)
     {
         $product = ProductModel::find($id);
@@ -148,7 +162,9 @@ class Product extends Component
         $this->deleteMode = true;
     }
 
-
+    /**
+     * Función para eliminar
+     */
     public function destroy()
     {
         if ($this->product_id) {
@@ -157,12 +173,12 @@ class Product extends Component
 
             if ($product) {
                 if ($product->delete()) {
-                    session()->flash('success', 'Permiso Borrado Correctamente.');
+                    session()->flash('success', 'Producto Borrado Correctamente.');
                 } else {
-                    session()->flash('error', 'Error al borrar el permiso.');
+                    session()->flash('error', 'Error al borrar el producto.');
                 }
             } else {
-                session()->flash('error', 'El permiso no existe.');
+                session()->flash('error', 'El producto no existe.');
             }
         }
         $this->resetInputFields();
@@ -170,6 +186,9 @@ class Product extends Component
         $this->emit('hideModal');
     }
 
+    /**
+     * Función para botón cancelar de modales
+     */
     public function cancel()
     {
         $this->product_id = null;
@@ -177,9 +196,12 @@ class Product extends Component
         $this->resetInputFields();
     }
 
+    /**
+     * Funcion para resetear los inputs
+     */
     public function resetInputFields()
     {
-        $this->resetValidation();
+        $this->resetValidation(); // Resetea la validación
         $this->product_id = null;
         $this->code = null;
         $this->name = null;
@@ -193,6 +215,9 @@ class Product extends Component
         $this->category_id = null;
     }
 
+    /**
+     * Función para resetear la paginación
+     */
     public function reset_page()
     {
         $this->reset('page');

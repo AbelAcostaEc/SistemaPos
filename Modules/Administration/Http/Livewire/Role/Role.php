@@ -2,44 +2,54 @@
 
 namespace Modules\Administration\Http\Livewire\Role;
 
+//Library
 use Livewire\Component;
 use Livewire\WithPagination;
 
-use App\Traits\AuthorizesRoleOrPermission;
-
+//Models
 use Spatie\Permission\Models\Permission;
 use Modules\Administration\Entities\Role as RoleModel;
+
+//Traits
+use App\Traits\AuthorizesRoleOrPermission;
 
 class Role extends Component
 {
     use WithPagination;
     use AuthorizesRoleOrPermission;
 
-    public $deleteMode = false;
-    public $name, $role_id, $role_view;
-    public $search, $permission;
+    public $search;
+    public $name, $role_id, $role_view, $permission;
+    public $deleteMode = false, $paginate = 5;
 
     public function render()
     {
         $this->authorizeRoleOrPermission('ver roles');
 
+        if ($this->search) {
+            $this->reset_page();
+        }
+
         $search = $this->search;
         $roles = RoleModel::where('name', 'like', '%' . $search . '%')
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate($this->paginate);
 
         $permissions = Permission::all();
         return view('administration::livewire.role.role', compact('roles', 'permissions'));
     }
 
+    /**
+     * Función para guardar
+     */
     public function store()
     {
         $data = $this->validate([
             'name' => 'required'
         ]);
         $data['guard_name'] = "web";
+        //crea el rol, añadiendo los permisos asignados
         if ($role = RoleModel::create($data)) {
-
             $role->permissions()->attach($this->permission);
             session()->flash('success', 'Rol Creado Correctamente.');
         } else {
@@ -49,6 +59,9 @@ class Role extends Component
         $this->emit('hideModal');
     }
 
+    /**
+     * Función para el modal editar
+     */
     public function edit($id)
     {
         $role = RoleModel::find($id);
@@ -62,9 +75,11 @@ class Role extends Component
         $this->permission = $aux_permission;
     }
 
+    /**
+     * Función para actualizar
+     */
     public function update()
     {
-
         $data = $this->validate([
             'name' => 'required'
         ]);
@@ -88,6 +103,9 @@ class Role extends Component
         $this->emit('hideModal');
     }
 
+    /**
+     * Función para modal eliminar
+     */
     public function delete($id)
     {
         $role = RoleModel::find($id);
@@ -101,6 +119,10 @@ class Role extends Component
         }
         $this->permission = $aux_permission;
     }
+
+    /**
+     * Función para eliminar
+     */
     public function destroy()
     {
         if ($this->role_id) {
@@ -121,6 +143,9 @@ class Role extends Component
         $this->emit('hideModal');
     }
 
+    /**
+     * Funcion para visualizar informacion de rol
+     */
     public function view($id)
     {
         $role = RoleModel::find($id);
@@ -130,27 +155,35 @@ class Role extends Component
         $this->permissions_role = $role->permissions(); */
     }
 
+    /**
+     * Función para cancelar en Modales
+     */
     public function cancel()
     {
-        $this->role_id = null;
         $this->deleteMode = false;
-        $this->role_view = null;
         $this->resetInputFields();
         $this->emit('hideModal');
     }
 
+    /**
+     * Funcion para resetear inputs
+     */
     public function resetInputFields()
     {
-
         $this->resetValidation();
         $this->role_id = null;
         $this->deleteMode = false;
         $this->name = null;
+        $this->role_view = null;
         unset($this->permission);
     }
 
+    /**
+     * Funcion para resetear paginación
+     */
     public function reset_page()
     {
         $this->reset('page');
+        $this->paginators['page'] = 1; //Se reinicia la paginacion
     }
 }

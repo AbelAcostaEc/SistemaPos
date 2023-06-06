@@ -2,20 +2,24 @@
 
 namespace Modules\Inventory\Http\Livewire\Category;
 
+//Library
 use Livewire\Component;
-use Modules\Inventory\Entities\Category as CategoryModel;
-use App\Traits\AuthorizesRoleOrPermission;
 use Livewire\WithPagination;
+
+//Modules
+use Modules\Inventory\Entities\Category as CategoryModel;
+
+//Traits
+use App\Traits\AuthorizesRoleOrPermission;
 
 class Category extends Component
 {
     use WithPagination;
     use AuthorizesRoleOrPermission;
 
-    public $deleteMode=false;
-    public $name, $category_id;
     public $search;
-    // public $categories;
+    public $name, $category_id;
+    public $deleteMode=false, $paginate=5;
 
     public function render()
     {
@@ -23,14 +27,17 @@ class Category extends Component
         if($this->search){
             $this->reset_page();
         }
-
+        // Realiza la consulta segun el buscador
         $categories=CategoryModel::where('name', 'like', '%' . $this->search . '%')
                         ->orWhere('id', 'like', '%' . $this->search . '%')
                         ->orderBy('id')
-                        ->paginate(5);
+                        ->paginate($this->paginate);
         return view('inventory::livewire.category.category', compact('categories'));
     }
 
+    /**
+     * Funcion para guardar
+     */
     public function store()
     {
         $data= $this->validate([
@@ -45,9 +52,12 @@ class Category extends Component
 
         $this->resetInputFields();
         $this->emit('hideModal');
-        $this->emit('datatable');
+    
     }
 
+    /**
+     * Funcion para modal editar
+     */
     public function edit($id)
     {
         $category=CategoryModel::find($id);
@@ -55,6 +65,9 @@ class Category extends Component
         $this->name=$category->name;
     }
 
+    /**
+     * Función para actualizar
+     */
     public function update(){
 
         $data= $this->validate([
@@ -73,9 +86,12 @@ class Category extends Component
 
         $this->resetInputFields();
         $this->emit('hideModal');
-        $this->emit('datatable');
+    
     }
 
+    /**
+     * Función para modal delete
+     */
     public function delete($id)
     {
         $category=CategoryModel::find($id);
@@ -84,7 +100,9 @@ class Category extends Component
         $this->deleteMode=true;
     }
 
-
+    /**
+     * Función para eliminar
+     */
     public function destroy()
     {
         if($this->category_id){
@@ -109,17 +127,23 @@ class Category extends Component
         $this->resetInputFields();
         $this->deleteMode=false;
         $this->emit('hideModal');
-        $this->emit('datatable');
+    
     }
 
+    /**
+     * Función para botón cancelar de modales
+     */
     public function cancel()
     {
         $this->category_id=null;
         $this->deleteMode=false;
         $this->resetInputFields();
-        $this->emit('datatable');
+    
     }
 
+    /**
+     * Funcion para resetear los inputs
+     */
     public function resetInputFields(){
         $this->resetValidation();
         $this->name=null;
@@ -127,6 +151,9 @@ class Category extends Component
         $this->deleteMode=false;
     }
 
+    /**
+     * Función para resetear la paginación
+     */
     public function reset_page(){
         $this->reset('page');
         $this->paginators['page'] = 1; //Se reinicia la paginacion

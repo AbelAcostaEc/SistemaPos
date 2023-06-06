@@ -4,7 +4,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalFormLabel">{{ $permission_id ? 'Editar Usuario' : 'Crear Usuario' }}</h5>
+                <h5 class="modal-title" id="modalFormLabel">{{ $permission_id ? 'Editar Usuario' : 'Crear Usuario' }}
+                </h5>
             </div>
             <div class="modal-body">
                 <div class="form-floating mb-3">
@@ -15,6 +16,14 @@
                     ]) !!}
                     <label for="name">Nombre</label>
                 </div>
+                @if(!$permission_id)
+                <div class="form-check">
+                    {!! Form::checkbox('group', 1, null, ['class' => 'form-check-input', 'id' => 'group', 'wire:model.defer' => 'group']) !!}
+                    <label class="form-check-label" for="group">Grupo de Permisos
+                        <i class="fa fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="Habilite la opción para generar los permisos ver, crear, editar, eliminar"></i>
+                    </label>
+                </div>
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"

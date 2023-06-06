@@ -2,11 +2,12 @@
 
 namespace Modules\Administration\Http\Livewire\UserProfile;
 
+//Library
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Livewire\WithFileUploads;
 
 
 class UserProfile extends Component
@@ -18,7 +19,6 @@ class UserProfile extends Component
     public $email, $password;
     public $curent_password, $new_password, $confirm_new_password;
 
-
     public function mount()
     {
         $user = Auth::user();
@@ -27,18 +27,20 @@ class UserProfile extends Component
         $this->phone_number = $user->phone_number;
         $this->birthdate = $user->birthdate;
         $this->address = $user->address;
-        $this->user=$user;
+        $this->user = $user;
     }
 
     public function render()
     {
-
         return view('administration::livewire.user-profile.user-profile');
     }
 
+    /**
+     * Funcion actualizar datos del perfil
+     */
     public function updateProfile()
     {
-        $data=$this->validate([
+        $this->validate([
             'name' => 'required|string|max:255',
             'phone_number' => 'numeric|min:10',
             'birthdate' => 'date',
@@ -56,7 +58,7 @@ class UserProfile extends Component
             if ($user->photo) {
                 Storage::disk('public')->delete($user->photo);
             }
-            $customName = 'profile'. date('YmdHis');
+            $customName = 'profile' . date('YmdHis');
             $extension = $this->photo->getClientOriginalExtension();
             $path = $this->photo->storeAs('profiles/' . $user->id, $customName . '.' . $extension, 'public');
 
@@ -65,12 +67,13 @@ class UserProfile extends Component
 
         $user->save();
 
-        // return redirect()->route('profile')->with('success', 'Perfil actualizado correctamente.');
-
         session()->flash('success', 'Perfil actualizado correctamente.');
         return redirect()->route('profile');
     }
 
+    /**
+     * Funcion para cambiar email
+     */
     public function changeEmail()
     {
 
@@ -80,45 +83,48 @@ class UserProfile extends Component
 
         $user = Auth::user();
 
-        if($this->password){
-            $confirm=Hash::check($this->password, $user->password);
+        if ($this->password) {
+            $confirm = Hash::check($this->password, $user->password);
 
             if ($confirm == false) {
                 session()->flash('error_sing_in', 'Contrasena incorrecta');
-            }else{
+            } else {
                 $user->email = $this->email;
                 $user->save();
                 session()->flash('success', 'Correo electrónico actualizado correctamente.');
             }
-        }else{
+        } else {
             session()->flash('error_sing_in', 'Debe ingresar su contraseña');
         }
         $this->resetInputFields();
     }
 
+    /**
+     * Funcion para cambiar contraseña
+     */
     public function changePassword()
     {
         $user = Auth::user();
 
-        if($this->curent_password){
+        if ($this->curent_password) {
 
-            $confirm=Hash::check($this->curent_password, $user->password);
+            $confirm = Hash::check($this->curent_password, $user->password);
 
             if ($confirm == false) {
                 session()->flash('error_sing_in', 'Contrasena Actual incorrecta.');
-            }else{
+            } else {
 
-                if(!$this->new_password ){
+                if (!$this->new_password) {
                     session()->flash('error_sing_in', 'Debe ingresar una nueva contraseña.');
                     return;
                 }
 
-                if(!$this->confirm_new_password ){
+                if (!$this->confirm_new_password) {
                     session()->flash('error_sing_in', 'Debe ingresar la confirmación de la nueva contraseña.');
                     return;
                 }
 
-                if($this->new_password != $this->confirm_new_password){
+                if ($this->new_password != $this->confirm_new_password) {
                     session()->flash('error_sing_in', 'La confirmación de la nueva contraseña no coincide.');
                     return;
                 }
@@ -126,16 +132,17 @@ class UserProfile extends Component
                 $user->save();
                 session()->flash('success', 'Contraseña actualizada correctamente.');
             }
-        }else{
+        } else {
             session()->flash('error_sing_in', 'Debe ingresar contraseña actual.');
         }
         $this->resetInputFields();
     }
 
+    /**
+     * Función para resetear inputs
+     */
     public function resetInputFields()
     {
-        $this->password=null;
+        $this->password = null;
     }
-
-
 }
