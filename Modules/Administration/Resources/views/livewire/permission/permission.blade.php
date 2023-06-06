@@ -12,14 +12,17 @@
             </div>
         @endcan
         <div class="col-md-12 my-5 d-flex justify-content-between align-items-center">
-            <div class="form-floating mb-3">
+            <!--begin::Search-->
+            <div class="d-flex align-items-center position-relative my-1 me-5">
+                <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5"><span class="path1"></span><span class="path2"></span></i>
                 {!! Form::text('search', null, [
-                    'class' => 'form-control' . ($errors->has('search') ? ' is-invalid' : ''),
+                    'class' => 'form-control form-control-solid w-250px ps-13' . ($errors->has('search') ? ' is-invalid' : ''),
+                    'data-kt-permissions-table-filter' => 'search',
                     'wire:model' => 'search',
-                    'placeholder' => 'search',
+                    'placeholder' => 'Buscar Permisos',
                 ]) !!}
-                <label for="search">Buscar</label>
             </div>
+            <!--end::Search-->
             <div class="d-flex align-items-center">
                 <span>Mostrar</span>
                 {!! Form::select('paginate', [5 => 5, 10 => 10, 20 => 20], null, [
@@ -68,7 +71,6 @@
             @include('partials.pagination', ['paginator' => $permissions])
         </div>
     </div>
-    {{-- @endcan --}}
     @include('administration::livewire.permission.form')
 
 </div>
