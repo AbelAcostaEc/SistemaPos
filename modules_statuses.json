@@ -1,4 +1,5 @@
 {
     "Administration": true,
-    "Inventory": true
+    "Inventory": true,
+    "SalesManagment": true
 }
