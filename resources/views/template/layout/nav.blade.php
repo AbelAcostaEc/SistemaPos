@@ -24,7 +24,7 @@
             <!--begin::Header tabs-->
             <ul class="nav flex-nowrap text-nowrap">
                 <li class="nav-item">
-                    <a class="nav-link @if(!$menu) active @endif" data-bs-toggle="tab" href="{{ url('administration/dashboard') }}">Inicio</a>
+                    <a class="nav-link @if(!$menu) active @endif" href="{{ url('administration/dashboard') }}">Inicio</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link @if($menu==1) active @endif" data-bs-toggle="tab" href="#kt_header_navs_tab_2">Administración</a>
@@ -33,7 +33,7 @@
                     <a class="nav-link @if($menu==2) active @endif" data-bs-toggle="tab" href="#kt_header_navs_tab_3">Inventario</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link @if($menu==3) active @endif" data-bs-toggle="tab" href="#kt_header_navs_tab_4">CRM</a>
+                    <a class="nav-link @if($menu==3) active @endif" data-bs-toggle="tab" href="#kt_header_navs_tab_4">Ventas</a>
                 </li>
             </ul>
             <!--begin::Header tabs-->

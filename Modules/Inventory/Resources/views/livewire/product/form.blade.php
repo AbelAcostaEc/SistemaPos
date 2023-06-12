@@ -92,34 +92,24 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <!--begin::Image input-->
-                        <div class="image-input image-input-outline" data-kt-image-input="true"
-                            style="background-image: url('{{ asset('media/profile-default.png') }}')">
-                            <!--begin::Preview existing avatar-->
-                            <div class="image-input-wrapper w-125px h-125px"
-                                style="background-image: url('{{ $product_image ? asset('storage/' . $product_image) : asset('media/profile-default.png') }}')">
-                            </div>
-                            <!--end::Preview existing avatar-->
-                            <!--begin::Label-->
-                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Cambiar imagen">
-                                <i class="ki-duotone ki-pencil fs-7">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
-                                <!--begin::Inputs-->
-                                {!! Form::file('image', [
-                                    'id' => 'image',
-                                    'wire:model.defer' => 'image',
-                                    'accept' => '.png, .jpg, .jpeg',
-                                ]) !!}
-                                <!--end::Inputs-->
-                            </label>
-                            <!--end::Label-->
+                        <label for="">Imagen</label>
+                         <!--begin::Inputs-->
+                         {!! Form::file('image', [
+                            'id' => 'image',
+                            'class' => 'form-control',
+                            'wire:model.defer' => 'image',
+                            'accept' => '.png, .jpg, .jpeg',
+                        ]) !!}
+                        <br>
+                        <div class="d-flex justify-content-center align-items-center">
+                            @if ($image)
+                                <img src="{{ $image->temporaryUrl() }}" width="100px" height="100px" class="img-fluid" alt="">
+                            @elseif($product_image)
+                                <img src="{{ asset('storage/' . $product_image) }}" width="100px" height="100px" class="img-fluid" alt="">
+                            @else
+                                <img src="{{ asset('media/profile-default.png') }}"  width="100px" height="100px" class="img-fluid" alt="">
+                            @endif
                         </div>
-                        <!--end::Image input-->
-                        <!--begin::Hint-->
-                        <div class="form-text">Tipos de archivo permitidos: png, jpg, jpeg.</div>
                         <!--end::Hint-->
                         @if ($image)
                             <script>
