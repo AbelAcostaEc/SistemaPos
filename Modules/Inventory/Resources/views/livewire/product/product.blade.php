@@ -10,6 +10,12 @@
                     Nuevo
                 </button>
             </div>
+            <div class="col-md-12 d-flex flex-end">
+                <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary" data-bs-toggle="modal"
+                    data-bs-target="#importForm">
+                    Importar Productos
+                </button>
+            </div>
         @endcan
         <div class="col-md-12 my-5 d-flex justify-content-between align-items-center">
             <!--begin::Search-->
@@ -25,68 +31,60 @@
             <!--end::Search-->
             <div class="d-flex align-items-center">
                 <span>Mostrar</span>
-                {!! Form::select('paginate', [5 => 5, 10 => 10, 20 => 20], null, [
+                {!! Form::select('paginate', [4 => 4, 10 => 10, 20 => 20], null, [
                     'class' => 'form-select mx-2',
                     'wire:model' => 'paginate',
                 ]) !!}
                 <span>Resultados</span>
             </div>
         </div>
-        <div class="table-responsive">
-            <table class="table border text-nowrap text-md-nowrap table-striped mb-0">
-                <thead>
-                    <tr>
-                        <th class="">Código</th>
-                        <th class="">Nombre</th>
-                        <th class="">Stock</th>
-                        <th class="">Precio de Compra</th>
-                        <th class="">Precio de Venta</th>
-                        {{-- <th class="">Descripcion</th> --}}
+        <div class="row">
+            @forelse ($products as $product)
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center">
+                            <img src="{{ asset('storage/'. $product->image) }}" height="100px" width="100px" alt="image">
+                        </div>
+                        <div class="d-flex flex-column text-center justify-content-center">
+                            <h3 class="fw-bolder fs-3 text-dark">{{ $product->name }}</h3>
+                            <span class="text-muted fw-bold">Restantes: {{ $product->stock }}</span>
+                        </div>
+                        <div class="d-flex justify-content-around">
+                            <div class="fw-bolder fs-3 text-dark">${{ $product->sale_price }}</div>
+                        </div>
                         @can('editar usuarios')
-                            <th class="">Acciones</th>
-                        @endcan
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($products as $product)
-                        <tr>
-                            <td>
-                                {{ $product->code }}
-                            </td>
-                            <td>{{ $product->name }}</td>
-                            <td>{{ $product->product }}</td>
-                            <td>{{ $product->purchase_price }}</td>
-                            <td>{{ $product->sale_price }}</td>
-                            @can('editar usuarios')
-                                <td>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-active-icon-primary btn-text-primary"
+                                data-bs-toggle="modal" data-bs-target="#modalForm"
+                                wire:click="edit({{ $product->id }})">
+                                <i class="fa fa-pencil"></i>
+                            </button>
 
-                                    <button type="button" class="btn btn-active-icon-primary btn-text-primary"
-                                        data-bs-toggle="modal" data-bs-target="#modalForm"
-                                        wire:click="edit({{ $product->id }})">
-                                        <i class="fa fa-pencil"></i>
-                                    </button>
-
-                                    @can('eliminar usuarios')
-                                        <button type="button" class="btn btn-active-icon-danger btn-text-danger"
-                                            data-bs-toggle="modal" data-bs-target="#modalForm"
-                                            wire:click="delete({{ $product->id }})">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    @endcan
-                                </td>
+                            @can('eliminar usuarios')
+                                <button type="button" class="btn btn-active-icon-danger btn-text-danger"
+                                    data-bs-toggle="modal" data-bs-target="#modalForm"
+                                    wire:click="delete({{ $product->id }})">
+                                    <i class="fa fa-trash"></i>
+                                </button>
                             @endcan
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="2" class="text-center py-4">No hay productos registrados</td>
-                        </tr>
-                    @endforelse
-                </tbody>
+                        </div>
+                    @endcan
+                    </div>                    
+                </div>
+            </div>
+            @empty
+            <table>
+                <tr>
+                    <td colspan="2" class="text-center py-4">No hay productos registrados</td>
+                </tr>
             </table>
+            @endforelse
         </div>
         <div class="my-5">
             @include('partials.pagination', ['paginator' => $products])
         </div>
     </div>
     @include('inventory::livewire.product.form')
+    @include('inventory::livewire.product.import')
 </div>

@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 //Models
 use Modules\Inventory\Entities\Product as ProductModel;
@@ -22,10 +23,10 @@ class Product extends Component
     use WithPagination;
     use WithFileUploads;
 
-    public $product_id, $code, $name, $description, $purchase_price, $sale_price, $stock, $minimum_stock, $image, $product_image;
-    public $categories, $category_id;
-    public $deleteMode, $search, $paginate = 5;
-
+    public $product_id, $code, $name, $description, $purchase_price, $sale_price, $stock, $minimum_stock, $image, $product_image; // Formulario
+    public $categories, $category_id; 
+    public $deleteMode, $search, $paginate = 4;
+    public $import_file;
 
     public function render()
     {
@@ -184,6 +185,18 @@ class Product extends Component
         $this->resetInputFields();
         $this->deleteMode = false;
         $this->emit('hideModal');
+    }
+
+    /**
+     * Funcion para importar productos desde un excel
+     */
+    public function import()
+    {
+        $this->validate([
+            'import_file' =>'required'
+        ]);
+        
+        dd($this->import_file);
     }
 
     /**

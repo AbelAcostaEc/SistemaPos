@@ -17,6 +17,7 @@
     <script type="text/javascript">
         window.livewire.on('hideModal', () => {
             $('#modalForm').modal('hide');
+            $('#importForm').modal('hide');
         });
     </script>
 @endsection
