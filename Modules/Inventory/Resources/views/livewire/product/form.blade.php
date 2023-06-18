@@ -107,7 +107,7 @@
                             @elseif($product_image)
                                 <img src="{{ asset('storage/' . $product_image) }}" width="100px" height="100px" class="img-fluid" alt="">
                             @else
-                                <img src="{{ asset('media/profile-default.png') }}"  width="100px" height="100px" class="img-fluid" alt="">
+                                <img src="{{ asset('media/no-image.png') }}"  width="100px" height="100px" class="img-fluid" alt="">
                             @endif
                         </div>
                         <!--end::Hint-->

@@ -5,15 +5,11 @@
     <div class="row">
         @can('crear productos')
             <div class="col-md-12 d-flex flex-end">
-                <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary" data-bs-toggle="modal"
-                    data-bs-target="#modalForm">
-                    Nuevo
+                <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary mx-2" data-bs-toggle="modal" data-bs-target="#modalForm">
+                    <i class="fa fa-plus"></i> Nuevo
                 </button>
-            </div>
-            <div class="col-md-12 d-flex flex-end">
-                <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary" data-bs-toggle="modal"
-                    data-bs-target="#importForm">
-                    Importar Productos
+                <button type="button" class="btn btn-outline btn-outline-success btn-active-success mx-2" data-bs-toggle="modal" data-bs-target="#importForm">
+                    <i class="fa fa-upload"></i> Importar Productos
                 </button>
             </div>
         @endcan
@@ -43,8 +39,13 @@
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
+                        <h4 class="text-center">Código: {{ $product->code }}</h4>
                         <div class="d-flex justify-content-center">
+                            @if($product->image)
                             <img src="{{ asset('storage/'. $product->image) }}" height="100px" width="100px" alt="image">
+                            @else
+                            <img src="{{ asset('media/no-image.png') }}" height="100px" width="100px" alt="image">
+                            @endif
                         </div>
                         <div class="d-flex flex-column text-center justify-content-center">
                             <h3 class="fw-bolder fs-3 text-dark">{{ $product->name }}</h3>

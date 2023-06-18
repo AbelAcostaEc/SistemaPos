@@ -7,10 +7,14 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="modalFormLabel">Importar Productos</h5>
             </div>
-            <div class="modal-body">                
-                <div class="row">                    
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <a href="{{ asset('media/Plantilla_product_import.xlsx') }}" class="btn btn-outline btn-outline-success btn-sm"><i class="fa fa-file-excel"></i> Descargar Plantilla</a>
+                        <p>Recuerde: El código es único para cada producto. <br> En Categoria debera ingresar el id de cada categoria</p>
+                    </div>
                     <div class="col-12">
-                        <label for="">Imagen</label>
+                        <label for="import_file">Imagen</label>
                          <!--begin::Inputs-->
                          {!! Form::file('import_file', [
                             'id' => 'import_file',
@@ -39,7 +43,7 @@
                                     "hideMethod": "fadeOut"
                                 };
 
-                                toastr.info("Imagen subida correctamente, Guarde los cambios.", "Correcto");
+                                toastr.info("Archivo subido correctamente, Guarde los cambios.", "Correcto");
                             </script>
                         @endif
                     </div>

@@ -16,14 +16,12 @@
                     ]) !!}
                     <label for="name">Nombre</label>
                 </div>
-                @if(!$permission_id)
                 <div class="form-check">
-                    {!! Form::checkbox('group', 1, null, ['class' => 'form-check-input', 'id' => 'group', 'wire:model.defer' => 'group']) !!}
+                    {!! Form::checkbox('group', 1, null, ['class' => 'form-check-input', 'id' => 'group', 'wire:model.defer' => 'group', 'disabled' => (!$permission_id) ? false : true ]) !!}
                     <label class="form-check-label" for="group">Grupo de Permisos
-                        <i class="fa fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="Habilite la opción para generar los permisos ver, crear, editar, eliminar"></i>
+                        <i wire:ignore class="fa fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="Habilite la opción para generar los permisos ver, crear, editar, eliminar"></i>
                     </label>
                 </div>
-                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
