@@ -8,7 +8,7 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-
+use Illuminate\Validation\ValidationException;
 //Models
 use Modules\Inventory\Entities\Product as ProductModel;
 use Modules\Inventory\Entities\Category as CategoryModel;
@@ -192,13 +192,74 @@ class Product extends Component
      */
     public function import()
     {
+        // Validar que se haya seleccionado un archivo para importar
         $this->validate([
             'import_file' =>'required'
         ]);
-        
-        dd($this->import_file);
-    }
+    
+        try {
+            // Columnas requeridas en el archivo
+            $required_columns= ['Codigo', 'Nombre', 'Descripcion', 'Precio Compra', 'Precio Venta', 'Stock', 'Stock Minimo', 'Categoria'];
+            // Convertir el archivo Excel en un array
+            $columns = Excel::toArray([], $this->import_file)[0][0];
+            $left_columns = array_diff($required_columns, $columns);  //verifica columnas faltantes
+            $extra_columns = array_diff($columns, $required_columns); //verifica columnas adicionales en archivo
+            // Verificar si las columnas necesarias están presentes en el archivo Excel
+            if (!empty($left_columns) || !empty($extra_columns)) {
+                $errorMessage = '';
+                if (!empty($left_columns)) {
+                    $errorMessage .= 'Faltan las siguientes columnas: ' . implode(', ', $left_columns) . '. ';
+                }
+                if (!empty($extra_columns)) {
+                    $errorMessage .= 'Columnas erroneas encontradas: ' . implode(', ', $extra_columns) . '. ';
+                }
 
+                throw ValidationException::withMessages([
+                    'import_file' => [$errorMessage],
+                ]);
+            }
+
+            // Verificar el orden de las columnas
+            if ($required_columns != $columns) {
+                throw ValidationException::withMessages([
+                    'import_file' => ['El archivo Excel no contiene el orden de columnas esperado.'],
+                ]);
+            }
+
+            // Realizar la importación de datos y operaciones adicionales
+            $data = Excel::toCollection([], $this->import_file)[0];
+            foreach ($data->skip(1) as $row) {
+                try {
+                    ProductModel::create([
+                        'code' => $row[0],
+                        'name' => $row[1],
+                        'description' => $row[2],
+                        'purchase_price' => $row[3],
+                        'sale_price' => $row[4],
+                        'stock' => $row[5],
+                        'minimum_stock' => $row[6],
+                        "category_id" => $row[7],
+                    ]);
+                } catch (\Exception $e) {
+                    // Capturar excepción específica de creación de registros y mostrar mensaje de error
+                    session()->flash('error', 'Error al crear un registro: ' . $e->getMessage());
+                }
+            }
+            
+            session()->flash('success', 'La importación se completó correctamente.');
+        } catch (ValidationException $e) {
+            // Capturar excepción de validación y obtener mensajes de error
+            $errorMessages = $e->validator->errors()->all();
+            $errorMessage = implode('<br>', $errorMessages);
+            session()->flash('error', $errorMessage);
+        } catch (\Exception $e) {
+            // Capturar cualquier otra excepción y mostrar mensaje genérico
+            session()->flash('error', 'Ocurrió un error al importar el archivo Excel: '.$e->getMessage());
+        }
+        $this->resetInputFields();
+        $this->emit('hideModal');
+    }
+    
     /**
      * Función para botón cancelar de modales
      */
@@ -226,6 +287,8 @@ class Product extends Component
         $this->image = null;
         $this->product_image = null;
         $this->category_id = null;
+        // importacion
+        $this->import_file = null;
     }
 
     /**
