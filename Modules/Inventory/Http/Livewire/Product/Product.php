@@ -25,7 +25,7 @@ class Product extends Component
 
     public $product_id, $code, $name, $description, $purchase_price, $sale_price, $stock, $minimum_stock, $image, $product_image; // Formulario
     public $categories, $category_id; 
-    public $deleteMode, $search, $paginate = 4;
+    public $deleteMode, $search, $paginate = 8;
     public $import_file;
 
     public function render()
@@ -208,10 +208,10 @@ class Product extends Component
             if (!empty($left_columns) || !empty($extra_columns)) {
                 $errorMessage = '';
                 if (!empty($left_columns)) {
-                    $errorMessage .= 'Faltan las siguientes columnas: ' . implode(', ', $left_columns) . '. ';
+                    $errorMessage .= 'Faltan las siguientes columnas: ' . implode(', ', $left_columns) . '.<br>';
                 }
                 if (!empty($extra_columns)) {
-                    $errorMessage .= 'Columnas erroneas encontradas: ' . implode(', ', $extra_columns) . '. ';
+                    $errorMessage .= 'Columnas erroneas encontradas: ' . implode(', ', $extra_columns) . '.<br>';
                 }
 
                 throw ValidationException::withMessages([

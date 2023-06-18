@@ -31,7 +31,7 @@
             <!--end::Search-->
             <div class="d-flex align-items-center">
                 <span>Mostrar</span>
-                {!! Form::select('paginate', [4 => 4, 10 => 10, 20 => 20], null, [
+                {!! Form::select('paginate', [8 => 8, 16 => 16, 24 => 24, 32 => 32], null, [
                     'class' => 'form-select mx-2',
                     'wire:model' => 'paginate',
                 ]) !!}
