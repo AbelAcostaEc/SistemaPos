@@ -12,6 +12,7 @@
         "laravel/tinker": "^2.7",
         "laravelcollective/html": "^6.4",
         "livewire/livewire": "^2.12",
+        "maatwebsite/excel": "^3.1",
         "mhmiton/laravel-modules-livewire": "^1.6",
         "nwidart/laravel-modules": "9.*",
         "spatie/laravel-permission": "^5.10"
