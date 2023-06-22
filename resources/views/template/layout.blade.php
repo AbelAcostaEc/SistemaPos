@@ -60,7 +60,7 @@
                     <!--begin::Post-->
                     <div class="content flex-row-fluid" id="kt_content">
                         <div class="card mb-5 mb-xxl-8 p-2">
-                            <div class="card-body" >
+                            <div class="card-body">
                                 @yield('content')
                             </div>
                         </div>

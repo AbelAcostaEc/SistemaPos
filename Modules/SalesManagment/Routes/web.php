@@ -12,5 +12,6 @@
 */
 
 Route::prefix('salesmanagment')->group(function() {
-    Route::get('/', 'SalesManagmentController@index');
+    // Route::get('/', 'SalesManagmentController@index');
+    Route::view('/orders', 'salesmanagment::livewire.order.index')->name('orders');
 });
