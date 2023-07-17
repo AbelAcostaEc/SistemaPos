@@ -19,4 +19,11 @@
             $('#modalForm').modal('hide');
         });
     </script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+    <script>
+        $("#kt_datepicker_1").flatpickr({
+            locale: "es"
+        });
+    </script>
+    
 @endsection
