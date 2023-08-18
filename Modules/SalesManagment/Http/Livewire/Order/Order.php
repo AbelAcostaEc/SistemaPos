@@ -9,7 +9,7 @@ use Livewire\WithPagination;
 use App\Traits\AuthorizesRoleOrPermission;
 //Models
 use Modules\Inventory\Entities\Product as ProductModel;
-use Modules\Inventory\Entities\Category as CategoryModel;
+use Modules\SalesManagment\Entities\Order as OrderModel;
 
 class Order extends Component
 {
@@ -21,7 +21,7 @@ class Order extends Component
     public $date;
 
     public function mount() {
-        $this->categories=CategoryModel::with('products')->get();
+        $test = OrderModel::get();                
     }
 
     public function render()
