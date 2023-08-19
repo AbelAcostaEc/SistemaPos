@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('subtotal', 10, 2);
             $table->decimal('tax', 10, 2);
             $table->decimal('total', 10, 2);
+            $table->text('note');
             $table->timestamps();
             $table->softDeletes();
             
