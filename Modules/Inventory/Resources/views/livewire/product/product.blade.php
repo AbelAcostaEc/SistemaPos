@@ -54,7 +54,7 @@
                         <div class="d-flex justify-content-around">
                             <div class="fw-bolder fs-3 text-dark">${{ $product->sale_price }}</div>
                         </div>
-                        @can('editar usuarios')
+                        @can('editar productos')
                         <div class="d-flex justify-content-center">
                             <button type="button" class="btn btn-active-icon-primary btn-text-primary"
                                 data-bs-toggle="modal" data-bs-target="#modalForm"
@@ -62,7 +62,7 @@
                                 <i class="fa fa-pencil"></i>
                             </button>
 
-                            @can('eliminar usuarios')
+                            @can('eliminar productos')
                                 <button type="button" class="btn btn-active-icon-danger btn-text-danger"
                                     data-bs-toggle="modal" data-bs-target="#modalForm"
                                     wire:click="delete({{ $product->id }})">

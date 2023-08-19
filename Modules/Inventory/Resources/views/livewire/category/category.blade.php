@@ -47,14 +47,18 @@
                             <td>{{ $category->id }}</td>
                             <td>{{ $category->name }}</td>
                             <td>
+                                @can('editar categorias')
                                 <button type="button" class="btn btn-active-icon-primary btn-text-primary" data-bs-toggle="modal"
                                     data-bs-target="#modalForm" wire:click="edit({{ $category->id }})">
                                     <i class="fa fa-pencil"></i>
                                 </button>
+                                @can('eliminar categorias')
                                 <button type="button" class="btn btn-active-icon-danger btn-text-danger" data-bs-toggle="modal"
                                     data-bs-target="#modalForm" wire:click="delete({{ $category->id }})">
                                     <i class="fa fa-trash"></i>
                                 </button>
+                                @endcan
+                                @endcan
                             </td>
                         </tr>
                     @empty

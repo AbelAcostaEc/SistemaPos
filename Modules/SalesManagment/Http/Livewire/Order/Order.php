@@ -21,12 +21,12 @@ class Order extends Component
     public $date;
 
     public function mount() {
-        $test = OrderModel::get();                
+        $test = OrderModel::get();
     }
 
     public function render()
     {
-        $this->authorizeRoleOrPermission('ver productos');
+        $this->authorizeRoleOrPermission('ver ordenes');
 
         $products = ProductModel::where('name', 'like', '%' . $this->search . '%')
                                 ->orWhere('code', 'like', '%' . $this->search . '%')
